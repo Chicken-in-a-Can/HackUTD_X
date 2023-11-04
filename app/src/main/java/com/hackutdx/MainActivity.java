@@ -32,6 +32,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         enableArButton();
+        View enable_ar = findViewById(R.id.enable_ar);
+        enable_ar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    createSession();
+                    new AR_Activity();
+                } catch (UnavailableDeviceNotCompatibleException e) {
+                    throw new RuntimeException(e);
+                } catch (UnavailableSdkTooOldException e) {
+                    throw new RuntimeException(e);
+                } catch (UnavailableArcoreNotInstalledException e) {
+                    throw new RuntimeException(e);
+                } catch (UnavailableApkTooOldException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
     void enableArButton(){
         View enable_ar = findViewById(R.id.enable_ar);
@@ -82,6 +100,5 @@ public class MainActivity extends AppCompatActivity {
         filter.setDepthSensorUsage(EnumSet.of(CameraConfig.DepthSensorUsage.DO_NOT_USE));
         List<CameraConfig> cameraConfigList = session.getSupportedCameraConfigs(filter);
         session.setCameraConfig(cameraConfigList.get(0));
-
     }
 }
