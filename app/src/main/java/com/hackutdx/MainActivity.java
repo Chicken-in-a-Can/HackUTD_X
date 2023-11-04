@@ -36,18 +36,7 @@ public class MainActivity extends AppCompatActivity {
         enable_ar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    createSession();
-                    new AR_Activity();
-                } catch (UnavailableDeviceNotCompatibleException e) {
-                    throw new RuntimeException(e);
-                } catch (UnavailableSdkTooOldException e) {
-                    throw new RuntimeException(e);
-                } catch (UnavailableArcoreNotInstalledException e) {
-                    throw new RuntimeException(e);
-                } catch (UnavailableApkTooOldException e) {
-                    throw new RuntimeException(e);
-                }
+                new AR_Activity();
             }
         });
     }
@@ -90,15 +79,5 @@ public class MainActivity extends AppCompatActivity {
             }
             finish();
         }
-    }
-    public void createSession() throws UnavailableDeviceNotCompatibleException, UnavailableSdkTooOldException, UnavailableArcoreNotInstalledException, UnavailableApkTooOldException {
-        Session session = new Session(this);
-        Config config = new Config(session);
-        session.configure(config);
-        CameraConfigFilter filter = new CameraConfigFilter(session);
-        filter.setTargetFps(EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30));
-        filter.setDepthSensorUsage(EnumSet.of(CameraConfig.DepthSensorUsage.DO_NOT_USE));
-        List<CameraConfig> cameraConfigList = session.getSupportedCameraConfigs(filter);
-        session.setCameraConfig(cameraConfigList.get(0));
     }
 }
