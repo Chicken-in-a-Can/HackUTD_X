@@ -1,8 +1,17 @@
 package com.hackutdx;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static android.Manifest.permission_group.CAMERA;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
+
 import com.google.ar.core.*;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
@@ -18,6 +27,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        enableArButton();
+    }
+    void enableArButton(){
+        View enable_ar = findViewById(R.id.enable_ar);
+        ArCoreApk.getInstance().checkAvailabilityAsync(this, availability -> {
+            if(availability.isSupported()){
+                enable_ar.setVisibility(View.VISIBLE);
+                enable_ar.setEnabled(true);
+            } else{
+                enable_ar.setVisibility(View.INVISIBLE);
+                enable_ar.setEnabled(false);
+            }
+        });
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Activity activity = this;
+        String CAMERA_PERMISSION = Manifest.permission.CAMERA;
+        int CAMERA_PERMISSION_CODE = 0;
+        if(!(ContextCompat.checkSelfPermission(activity, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED)){
+            ActivityCompat.requestPermissions(
+                    activity, new String[] {CAMERA_PERMISSION}, CAMERA_PERMISSION_CODE
+            );
+        }
     }
     public void createSession() throws UnavailableDeviceNotCompatibleException, UnavailableSdkTooOldException, UnavailableArcoreNotInstalledException, UnavailableApkTooOldException {
         Session session = new Session(this);
