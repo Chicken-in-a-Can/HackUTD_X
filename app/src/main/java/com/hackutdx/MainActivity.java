@@ -63,6 +63,13 @@ public class MainActivity extends AppCompatActivity {
                     activity, new String[] {CAMERA_PERMISSION}, CAMERA_PERMISSION_CODE
             );
         }
+        String LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
+        int LOCATION_PERMISSION_CODE = 0;
+        if(!(ContextCompat.checkSelfPermission(activity, LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED)){
+            ActivityCompat.requestPermissions(
+                    activity, new String[] {LOCATION_PERMISSION}, LOCATION_PERMISSION_CODE
+            );
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results){
