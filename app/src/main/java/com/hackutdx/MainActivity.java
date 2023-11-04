@@ -8,9 +8,13 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.ar.core.*;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
@@ -51,6 +55,22 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(
                     activity, new String[] {CAMERA_PERMISSION}, CAMERA_PERMISSION_CODE
             );
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results){
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        String CAMERA_PERMISSION = Manifest.permission.CAMERA;
+        int CAMERA_PERMISSION_CODE = 0;
+        if(!(ContextCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED)){
+            Toast.makeText(this, "Camera permission is needed to run AR", Toast.LENGTH_LONG).show();
+            if(!(ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA_PERMISSION))){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.fromParts("package", this.getPackageName(), null));
+                this.startActivity(intent);
+            }
+            finish();
         }
     }
     public void createSession() throws UnavailableDeviceNotCompatibleException, UnavailableSdkTooOldException, UnavailableArcoreNotInstalledException, UnavailableApkTooOldException {
