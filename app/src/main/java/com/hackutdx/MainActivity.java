@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         enable_ar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AR_Activity();
+                startActivity(new Intent(MainActivity.this, AR_Activity.class));
             }
         });
     }

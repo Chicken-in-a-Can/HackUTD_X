@@ -35,6 +35,7 @@
         <activity
             android:name=".AR_Activity"
             android:exported="true"
+            android:parentActivityName=".MainActivity"
             >
         </activity>
         <meta-data  android:name="com.google.ar.core" android:value="required" />
