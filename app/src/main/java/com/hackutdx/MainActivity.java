@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     createSession();
+                    new AR_Activity();
                 } catch (UnavailableDeviceNotCompatibleException e) {
                     throw new RuntimeException(e);
                 } catch (UnavailableSdkTooOldException e) {
@@ -99,6 +100,5 @@ public class MainActivity extends AppCompatActivity {
         filter.setDepthSensorUsage(EnumSet.of(CameraConfig.DepthSensorUsage.DO_NOT_USE));
         List<CameraConfig> cameraConfigList = session.getSupportedCameraConfigs(filter);
         session.setCameraConfig(cameraConfigList.get(0));
-
     }
 }
