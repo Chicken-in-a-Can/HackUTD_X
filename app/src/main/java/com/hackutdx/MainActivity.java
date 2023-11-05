@@ -32,22 +32,30 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public List<Map_Stuff.Step_Tuple> get_steps()
+    {
+
+        Get_directions_list gdl = new Get_directions_list();
+        gdl.execute(this);
+        return gdl.steps;
+    }
     class Get_directions_list extends AsyncTask<Context, Void, Void>
     {
-       /* @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Looper.prepare();
-        }*/
 
+        public List<Map_Stuff.Step_Tuple> steps;
         @Override
         protected Void doInBackground(Context... contexts) {
              try {
+                Looper.prepare();
                 Map_Stuff m = new Map_Stuff(contexts[0]);
                 TextView route = findViewById(R.id.textView);
                 //route.setText("" + m.latitude + " " + m.longitude);
-                String steps = m.get_steps(m.read_url(m.getURL("2801 Rutford Avenue")));
-                route.setText(steps);
+                steps = m.get_steps(m.read_url(m.getURL("2801 Rutford Avenue")));
+                int i = 0;
+                for(Map_Stuff.Step_Tuple step : steps)
+                 {
+                     Log.d("final_step_" + i++, step.str + " " + step.distance_in_meters);
+                 }
 
             }catch(Exception e){
                  Log.d("StackTrace",e.getMessage());
@@ -76,7 +84,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new Get_directions_list().execute(this);
+        //Use this line to get directions list from current spot
+        List<Map_Stuff.Step_Tuple> steps = get_steps();
+        Log.d("Step sumn" , "bluh");
+        for(Map_Stuff.Step_Tuple st: steps)
+        {
+            Log.d("Step_out" , st.toString());
+        }
     }
     void enableArButton(){
         View enable_ar = findViewById(R.id.enable_ar);
