@@ -62,7 +62,17 @@ public class Map_Stuff {
     public String get_steps(JSONObject obj)
     {
         StringBuilder buffer = new StringBuilder();
-        List<JSONObject> routes = (List) obj.get("routes");
+        List<Object> routes = (List) obj.get("routes");
+        Object route = routes.get(0);
+        List<Object> legs = (List) ((JSONObject) route).get("legs");
+        Object leg = legs.get(0);
+        List<Object> steps = (List) ((JSONObject) leg).get("steps");
+
+        for(Object step: steps)
+        {
+            buffer.append((String)((JSONObject)step).get("html_instructions"));
+            buffer.append(' ');
+        }
         return buffer.toString();
     }
 }
