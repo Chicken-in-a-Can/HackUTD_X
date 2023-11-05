@@ -38,7 +38,7 @@ public class Get_directions_list extends AsyncTask<Context, Void, Void>
             for(Map_Stuff.Step_Tuple step : steps)
             {
                 Log.d("final_step_" + i++, step.str + " " + step.distance_in_meters);
-                generated_steps_list.add(new Map_Stuff.Step_Tuple(step.str, step.distance_in_meters));
+                generated_steps_list.add(new Map_Stuff.Step_Tuple(step.str, step.distance_in_meters, step.maneuver));
             }
             finished = true;
 

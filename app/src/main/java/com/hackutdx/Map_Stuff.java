@@ -103,21 +103,25 @@ public class Map_Stuff {
     {
         public String str;
         public long distance_in_meters;
+
+        public String maneuver;
         public Step_Tuple(JSONObject step)
         {
             str = (((String)step.get("html_instructions")).replaceAll("<[^>]*>", " ") + " in " + ((String)((JSONObject)step.get("distance")).get("text"))).replaceAll(" +", " ").trim();
             distance_in_meters = (long)((JSONObject)step.get("distance")).get("value");
+            maneuver = (String)((JSONObject)step.get("navigationInstruction")).get("string");
         }
 
-        public Step_Tuple(String sstr, long ddistance)
+        public Step_Tuple(String sstr, long ddistance, String mmaneuver)
         {
             str = sstr;
             distance_in_meters = ddistance;
+            maneuver = mmaneuver;
         }
 
         public String toString()
         {
-            return str + " " + distance_in_meters;
+            return str + " " + distance_in_meters + " " + maneuver;
         }
     }
 
