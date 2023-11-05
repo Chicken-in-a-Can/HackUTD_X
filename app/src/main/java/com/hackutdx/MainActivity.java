@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
                  finished = false;
                 Looper.prepare();
                 Map_Stuff m = new Map_Stuff(contexts[0]);
-                TextView route = findViewById(R.id.textView);
-                //route.setText("" + m.latitude + " " + m.longitude);
                 steps = m.get_steps(m.read_url(m.getURL("2801 Rutford Avenue")));
                 int i = 0;
                 for(Map_Stuff.Step_Tuple step : steps)
@@ -93,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Use this line to get directions list from current spot
         List<Map_Stuff.Step_Tuple> steps = get_steps();
+        //steps.get(i).distance_in_meters
+        //            .str
 
 
         try{
