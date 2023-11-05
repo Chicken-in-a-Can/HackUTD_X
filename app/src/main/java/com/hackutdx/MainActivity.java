@@ -156,5 +156,18 @@ public class MainActivity extends AppCompatActivity {
             }
             finish();
         }
+
+        String LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
+        int LOCATION_PERMISSION_CODE = 0;
+        if(!(ContextCompat.checkSelfPermission(this, LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED)){
+            Toast.makeText(this, "Fine Location permission is needed to run maps API", Toast.LENGTH_LONG).show();
+            if(!(ActivityCompat.shouldShowRequestPermissionRationale(this, LOCATION_PERMISSION))){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.fromParts("package", this.getPackageName(), null));
+                this.startActivity(intent);
+            }
+            finish();
+        }
     }
 }
