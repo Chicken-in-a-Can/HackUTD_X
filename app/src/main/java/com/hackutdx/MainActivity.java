@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 Map_Stuff m = new Map_Stuff(contexts[0]);
                 TextView route = findViewById(R.id.textView);
                 route.setText("" + m.latitude + " " + m.longitude);
-                String steps = m.get_steps(m.read_url(m.getURL("2408 River Rock Cir Arlington TX")));
+                String steps = m.get_steps(m.read_url(m.getURL("2801 Rutford Avenue")));
                 route.setText(steps);
 
             }catch(Exception e){

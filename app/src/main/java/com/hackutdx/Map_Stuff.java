@@ -1,6 +1,7 @@
 package com.hackutdx;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -24,6 +25,8 @@ import java.util.List;
 public class Map_Stuff {
     public double longitude;
     public double latitude;
+    public Context context;
+
 
     public final LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
@@ -31,7 +34,10 @@ public class Map_Stuff {
             latitude = location.getLatitude();
         }
     };
-    public Map_Stuff(Context context) {
+    public Map_Stuff(Context c) {
+
+        context = c;
+
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -45,13 +51,16 @@ public class Map_Stuff {
 
     public String getURL(String destination_address)
     {
+        ((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText("getURL");
         String url_formatted_destination_address = destination_address.replaceAll(" ", "+");
         String url_string = "https://maps.googleapis.com/maps/api/directions/json?destination=" + url_formatted_destination_address + "&&origin=" + latitude + "," + longitude + "&key=AIzaSyADi3dDW9bZQ_LdXJpSjVALSB-FN9WSzc4";
+        ((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText(url_string);
         return url_string;
     }
 
     public JSONObject read_url(String url_string) throws Exception
     {
+        ((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText("read_url");
         StringBuilder result = new StringBuilder();
         URL url = new URL(url_string);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -62,11 +71,13 @@ public class Map_Stuff {
                 result.append(line);
             }
         }
+        ((TextView)((Activity)context).findViewById(R.id.textView)).setText(result.toString());
         return (JSONObject) new JSONParser().parse(result.toString());
     }
 
     public String get_steps(JSONObject obj)
     {
+        //((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText("get_steps");
         StringBuilder buffer = new StringBuilder();
         List<Object> routes = (List) obj.get("routes");
         Object route = routes.get(0);
