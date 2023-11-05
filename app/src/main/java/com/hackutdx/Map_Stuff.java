@@ -9,6 +9,7 @@ import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
 
+import org.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -16,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class Map_Stuff {
     public double longitude;
@@ -55,5 +57,12 @@ public class Map_Stuff {
             }
         }
         return (JSONObject) new JSONParser().parse(result.toString());
+    }
+
+    public String get_steps(JSONObject obj)
+    {
+        StringBuilder buffer = new StringBuilder();
+        List<JSONObject> routes = (List) obj.get("routes");
+        return buffer.toString();
     }
 }
