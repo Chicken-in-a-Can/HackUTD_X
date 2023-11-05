@@ -29,15 +29,16 @@ public class Map_Stuff {
     public Context context;
 
 
-    public final LocationListener locationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-        }
-    };
+    public LocationListener locationListener;
     public Map_Stuff(Context c) {
 
         context = c;
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+            }
+        };
 
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -47,7 +48,7 @@ public class Map_Stuff {
         Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         latitude = l.getLatitude();
         longitude = l.getLongitude();
-        //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 10, locationListener);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 10, locationListener);
     }
 
     public String getURL(String destination_address)

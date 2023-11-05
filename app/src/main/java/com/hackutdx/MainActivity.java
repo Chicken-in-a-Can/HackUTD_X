@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -33,8 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
     class Get_directions_list extends AsyncTask<Context, Void, Void>
     {
-
-
+       /* @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Looper.prepare();
+        }*/
 
         @Override
         protected Void doInBackground(Context... contexts) {
@@ -46,14 +50,12 @@ public class MainActivity extends AppCompatActivity {
                 route.setText(steps);
 
             }catch(Exception e){
-                TextView route = findViewById(R.id.textView);
-                StringBuilder stbuf = new StringBuilder();
-                for(StackTraceElement ste: e.getStackTrace())
+                 Log.d("StackTrace",e.getMessage());
+                StackTraceElement[] ste_arr = e.getStackTrace();
+                for(int i = 0; i < ste_arr.length; i++)
                 {
-                    stbuf.append(ste.toString());
-                    stbuf.append('\n');
+                    Log.d("StackTrace_" + i, ste_arr[i].toString());
                 }
-                route.setText(stbuf.toString());
 
             }
             return null;
