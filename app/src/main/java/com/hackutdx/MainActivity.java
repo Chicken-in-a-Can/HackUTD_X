@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Use this line to get directions list from current spot
         List<Map_Stuff.Step_Tuple> steps = get_steps();
-        //steps.get(i).distance_in_meters
+        //steps.get(0).distance_in_meters
         //            .str
 
 
