@@ -15,11 +15,14 @@ public class Get_directions_list extends AsyncTask<Context, Void, Void>
 {
     public boolean finished;
     public static List<Map_Stuff.Step_Tuple> generated_steps_list;
-    public static List<Map_Stuff.Step_Tuple> get_steps(Context context)
+    public static String destination_address;
+    public static List<Map_Stuff.Step_Tuple> get_steps(Context context, String dest_address)
     {
+        destination_address = dest_address;
         generated_steps_list = new ArrayList<>();
         Get_directions_list gdl = new Get_directions_list();
         gdl.execute(context);
+        while(!gdl.finished);
         return generated_steps_list;
     }
 
@@ -30,7 +33,7 @@ public class Get_directions_list extends AsyncTask<Context, Void, Void>
             finished = false;
             Looper.prepare();
             Map_Stuff m = new Map_Stuff(contexts[0]);
-            steps = m.get_steps(m.read_url(m.getURL("2801 Rutford Avenue")));
+            steps = m.get_steps(m.read_url(m.getURL(destination_address)));
             int i = 0;
             for(Map_Stuff.Step_Tuple step : steps)
             {

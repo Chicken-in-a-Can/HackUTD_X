@@ -54,10 +54,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Use this line to get directions list from current spot
-        List<Map_Stuff.Step_Tuple> steps = Get_directions_list.get_steps(this);
+        List<Map_Stuff.Step_Tuple> steps = Get_directions_list.get_steps(this, "2408 River Rock Circle");
         //steps.get(0).distance_in_meters
         //            .str
 
+
+        Log.d("Steps_size" , "" + steps.size());
 
         try{
             for(Map_Stuff.Step_Tuple st: steps)
