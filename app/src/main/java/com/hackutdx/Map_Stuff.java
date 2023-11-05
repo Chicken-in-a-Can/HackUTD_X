@@ -90,7 +90,7 @@ public class Map_Stuff {
         List<JSONObject> steps = (List) leg.get("steps");
 
 
-        List<Step_Tuple> step_tuples = new ArrayList();
+        List<Step_Tuple> step_tuples = new ArrayList<Step_Tuple>();
         for(JSONObject step: steps)
         {
             step_tuples.add(new Step_Tuple(step));
@@ -98,7 +98,7 @@ public class Map_Stuff {
         return step_tuples;
     }
 
-    class Step_Tuple
+    static class Step_Tuple
     {
         public String str;
         public long distance_in_meters;
@@ -106,6 +106,12 @@ public class Map_Stuff {
         {
             str = (((String)step.get("html_instructions")).replaceAll("<[^>]*>", " ") + " in " + ((String)((JSONObject)step.get("distance")).get("text"))).replaceAll(" +", " ").trim();
             distance_in_meters = (long)((JSONObject)step.get("distance")).get("value");
+        }
+
+        public Step_Tuple(String sstr, long ddistance)
+        {
+            str = sstr;
+            distance_in_meters = ddistance;
         }
 
         public String toString()

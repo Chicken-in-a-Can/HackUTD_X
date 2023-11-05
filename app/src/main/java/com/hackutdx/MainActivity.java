@@ -27,25 +27,30 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    public List<Map_Stuff.Step_Tuple> generated_steps_list;
     public List<Map_Stuff.Step_Tuple> get_steps()
     {
-
+        generated_steps_list = new ArrayList<>();
         Get_directions_list gdl = new Get_directions_list();
         gdl.execute(this);
-        return gdl.steps;
+        while(!gdl.finished);
+        return generated_steps_list;
     }
     class Get_directions_list extends AsyncTask<Context, Void, Void>
     {
-
+        public boolean finished;
         public List<Map_Stuff.Step_Tuple> steps;
         @Override
         protected Void doInBackground(Context... contexts) {
              try {
+                 finished = false;
                 Looper.prepare();
                 Map_Stuff m = new Map_Stuff(contexts[0]);
                 TextView route = findViewById(R.id.textView);
@@ -55,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 for(Map_Stuff.Step_Tuple step : steps)
                  {
                      Log.d("final_step_" + i++, step.str + " " + step.distance_in_meters);
+                     ((MainActivity)(contexts[0])).generated_steps_list.add(new Map_Stuff.Step_Tuple(step.str, step.distance_in_meters));
                  }
+                finished = true;
 
             }catch(Exception e){
                  Log.d("StackTrace",e.getMessage());
@@ -86,11 +93,22 @@ public class MainActivity extends AppCompatActivity {
 
         //Use this line to get directions list from current spot
         List<Map_Stuff.Step_Tuple> steps = get_steps();
-        //Log.d("Step sumn" , "bluh");
-        //for(Map_Stuff.Step_Tuple st: steps)
-        //{
-        //    Log.d("Step_out" , st.toString());
-        //}
+
+
+        try{
+            for(Map_Stuff.Step_Tuple st: steps)
+            {
+            Log.d("Step_out" , st.toString());
+            }
+        }catch(Exception e){
+            Log.d("steps_StackTrace",e.getMessage());
+            StackTraceElement[] ste_arr = e.getStackTrace();
+            for(int i = 0; i < ste_arr.length; i++)
+            {
+            Log.d("steps_StackTrace_" + i, ste_arr[i].toString());
+            }
+
+        }
     }
     void enableArButton(){
         View enable_ar = findViewById(R.id.enable_ar);
