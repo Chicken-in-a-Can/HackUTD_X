@@ -51,6 +51,7 @@ public class AR_Activity : AppCompatActivity(R.layout.ar_activity) {
         }
 
     override fun onCreate(savedInstanceState: Bundle?){
+
         super.onCreate(savedInstanceState)
         setFullScreen(
             findViewById(R.id.rootView),
@@ -92,15 +93,13 @@ public class AR_Activity : AppCompatActivity(R.layout.ar_activity) {
                     isEditable = true
                     lifecycleScope.launch {
                         isLoading = true
-                        sceneView.modelLoader.loadModelInstance(
-                            "https://drive.google.com/file/d/13_IvgSGIDikcLdU-GyW3RjdREkcFhCnR/view?usp=sharing"
-                        )?.let{
+                        sceneView.modelLoader.loadModelInstance(arrow)?.let{
                             modelInstance ->
                                 addChildNode(
                                     ModelNode(
                                         modelInstance = modelInstance,
-                                        scaleToUnits = 1f,
-                                        centerOrigin = Position(y = 5f)
+                                        scaleToUnits = 0.5f,
+                                        centerOrigin = Position(y = -0.5f)
                                     ).apply {
                                         isEditable = true
                                     }
