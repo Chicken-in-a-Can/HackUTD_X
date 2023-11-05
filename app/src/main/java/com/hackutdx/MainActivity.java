@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         List<Map_Stuff.Step_Tuple> steps = Get_directions_list.get_steps(this, "2408 River Rock Circle");
         //steps.get(0).distance_in_meters
         //            .str
+        //            .maneuver
 
 
         Log.d("Steps_size" , "" + steps.size());
