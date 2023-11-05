@@ -34,46 +34,10 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    public List<Map_Stuff.Step_Tuple> generated_steps_list;
-    public List<Map_Stuff.Step_Tuple> get_steps()
-    {
-        generated_steps_list = new ArrayList<>();
-        Get_directions_list gdl = new Get_directions_list();
-        gdl.execute(this);
-        while(!gdl.finished);
-        return generated_steps_list;
-    }
-    class Get_directions_list extends AsyncTask<Context, Void, Void>
-    {
-        public boolean finished;
-        public List<Map_Stuff.Step_Tuple> steps;
-        @Override
-        protected Void doInBackground(Context... contexts) {
-             try {
-                 finished = false;
-                Looper.prepare();
-                Map_Stuff m = new Map_Stuff(contexts[0]);
-                steps = m.get_steps(m.read_url(m.getURL("2801 Rutford Avenue")));
-                int i = 0;
-                for(Map_Stuff.Step_Tuple step : steps)
-                 {
-                     Log.d("final_step_" + i++, step.str + " " + step.distance_in_meters);
-                     ((MainActivity)(contexts[0])).generated_steps_list.add(new Map_Stuff.Step_Tuple(step.str, step.distance_in_meters));
-                 }
-                finished = true;
 
-            }catch(Exception e){
-                 Log.d("StackTrace",e.getMessage());
-                StackTraceElement[] ste_arr = e.getStackTrace();
-                for(int i = 0; i < ste_arr.length; i++)
-                {
-                    Log.d("StackTrace_" + i, ste_arr[i].toString());
-                }
 
-            }
-            return null;
-        }
-    }
+
+
 
 
     @Override
@@ -90,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Use this line to get directions list from current spot
-        List<Map_Stuff.Step_Tuple> steps = get_steps();
+        List<Map_Stuff.Step_Tuple> steps = Get_directions_list.get_steps(this);
         //steps.get(0).distance_in_meters
         //            .str
 
