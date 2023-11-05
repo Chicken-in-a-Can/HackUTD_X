@@ -55,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //  X   X    XXXXX    XXXX     XXXXX
+        //  X   X    X        X   X    X
+        //  XXXXX    XXXXX    XXXX     XXXXX
+        //  X   X    X        X  X     X
+        //  X   X    XXXXX    X    X   XXXXX
+        //
         //Use this line to get directions list from current spot
         //List<Map_Stuff.Step_Tuple> steps = Get_directions_list.get_steps(this, "2408 River Rock Circle");
         //steps.get(0).distance_in_meters
