@@ -1,16 +1,41 @@
 package com.hackutdx;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CaptureRequest;
+import android.opengl.EGLConfig;
+import android.opengl.GLSurfaceView;
+import android.opengl.GLES20;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.PersistableBundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.*;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.google.ar.core.ArCoreApk;
+import com.google.ar.core.Camera;
 import com.google.ar.core.CameraConfig;
 import com.google.ar.core.CameraConfigFilter;
 import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Session;
+import com.google.ar.core.SharedCamera;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
@@ -19,25 +44,121 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import java.util.EnumSet;
 import java.util.List;
 
-public class AR_Activity extends AppCompatActivity {
-    protected void OnCreate(Bundle arState) throws UnavailableDeviceNotCompatibleException, UnavailableSdkTooOldException, UnavailableArcoreNotInstalledException, UnavailableApkTooOldException {
+import javax.microedition.khronos.opengles.GL10;
+
+public class AR_Activity extends AppCompatActivity implements GLSurfaceView.Renderer{
+    private Session session;
+    HandlerThread backgroundThread;
+    Handler backgroundHandler;
+    GLSurfaceView gl_view;
+    GestureDetector gestureDetector;
+    private boolean installRequired;
+
+    @Override
+    protected void onCreate(Bundle arState){
         super.onCreate(arState);
-        setContentView(R.layout.ar_activity);
 
-        View ar_view = findViewById(R.id.ar_view);
+        gl_view = new GLSurfaceView(this);
 
-        Session session = new Session(this);
-        Config config = new Config(session);
-        session.configure(config);
+        setContentView(gl_view);
 
-        CameraConfigFilter filter = new CameraConfigFilter(session);
-        filter.setTargetFps(EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30));
-        filter.setDepthSensorUsage(EnumSet.of(CameraConfig.DepthSensorUsage.DO_NOT_USE));
+        gestureDetector = new GestureDetector(
+                this,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent event) {
+                        onSingleTapUp(event);
+                        return true;
+                    }
 
-        List<CameraConfig> cameraConfigList = session.getSupportedCameraConfigs(filter);
-        session.setCameraConfig(cameraConfigList.get(0));
+                    @Override
+                    public boolean onDown(MotionEvent event) {
+                        return true;
+                    }
+                }
+        );
+        gl_view.setOnTouchListener(
+                new View.OnTouchListener(){
+                    @Override
+                    public boolean onTouch(View view, MotionEvent event){
+                        return gestureDetector.onTouchEvent(event);
+                    }
+                }
+        );
+        gl_view.setPreserveEGLContextOnPause(true);
+        gl_view.setEGLContextClientVersion(2);
+        gl_view.setEGLConfigChooser(8, 8, 8, 8 ,16, 0);
+        gl_view.setRenderer(this);
+        gl_view.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
-        while (true){
+        installRequired = false;
+
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(session == null){
+            Exception exception = null;
+            String message = null;
+            try{
+                switch(ArCoreApk.getInstance().requestInstall(this, !installRequired)){
+                    case INSTALL_REQUESTED:
+                        installRequired = true;
+                        return;
+                    case INSTALLED:
+                        break;
+                }
+                String CAMERA_PERMISSION = Manifest.permission.CAMERA;
+                int CAMERA_PERMISSION_CODE = 0;
+                if(!(ContextCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED)){
+                    ActivityCompat.requestPermissions(
+                            this, new String[] {CAMERA_PERMISSION}, CAMERA_PERMISSION_CODE
+                    );
+                    return;
+                }
+                session = new Session(this);
+            } catch(Exception e){
+                message = "Some error with AR";
+                exception = e;
+            }
+            if(message != null){
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Config config = new Config(session);
+            if(!session.isSupported(config)){
+                Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
+            }
+            session.configure(config);
+            try {
+                session.resume();
+            } catch (CameraNotAvailableException e) {
+                throw new RuntimeException(e);
+            }
+            gl_view.onResume();
         }
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(session != null){
+            gl_view.onPause();
+            session.pause();
+        }
+    }
+
+    @Override
+    public void onSurfaceCreated(GL10 gl10, javax.microedition.khronos.egl.EGLConfig eglConfig) {
+
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl10, int i, int i1) {
+
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl10) {
+
     }
 }
