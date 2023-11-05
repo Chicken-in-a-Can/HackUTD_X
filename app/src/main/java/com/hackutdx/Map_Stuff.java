@@ -49,7 +49,7 @@ public class Map_Stuff {
             return;
         }
         //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 10, locationListener);
-        Location last_location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location last_location = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         longitude = last_location.getLongitude();
         latitude = last_location.getLatitude();
     }
