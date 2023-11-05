@@ -38,7 +38,9 @@ private const val kModelFile = "https://drive.google.com/uc?export=download&id=1
 class Compose_AR : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val destination = MainActivity.getDestination()
+        val steps = Get_directions_list.get_steps(this@Compose_AR, destination)
+        val next_step = steps.get(0).distance_in_meters
 
         setContent {
             // A surface container using the 'background' color from the theme
@@ -51,13 +53,6 @@ class Compose_AR : ComponentActivity() {
                 val modelLoader = rememberModelLoader(engine)
                 val childNodes = rememberNodes()
                 val coroutineScope = rememberCoroutineScope()
-
-                //Use this line to get directions list from current spot
-                Log.d("Passed1" , "we ball with " + MainActivity.getDestination() );
-                val steps = Get_directions_list.get_steps(this@Compose_AR, MainActivity.getDestination())
-                Log.d("Passed2" , "we ball");
-                val next_step = steps.get(0).distance_in_meters
-                Log.d("Passed3", "" + next_step)
                 ARScene(
                     modifier = Modifier.fillMaxSize(),
                     childNodes = childNodes,
@@ -95,7 +90,7 @@ class Compose_AR : ComponentActivity() {
                                                     scaleToUnits = 10f,
                                                     // Bottom origin instead of center so the
                                                     // model base is on floor
-                                                    centerOrigin = Position(x = 0f, y = -2f, z = if(next_step < 25){next_step.toFloat()}else{25f}),
+                                                    centerOrigin = Position(x = 0f, y = -2f, z = next_step.toFloat()),
                                                 ).apply {
                                                     isEditable = true
                                                 }
