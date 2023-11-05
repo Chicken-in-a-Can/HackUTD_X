@@ -18,6 +18,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         enableArButton();
         View enable_ar = findViewById(R.id.enable_ar);
+        String user_entered_address = ((EditText)findViewById(R.id.input_address)).getText().toString();
         enable_ar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,13 +56,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Use this line to get directions list from current spot
-        List<Map_Stuff.Step_Tuple> steps = Get_directions_list.get_steps(this, "2408 River Rock Circle");
+        //List<Map_Stuff.Step_Tuple> steps = Get_directions_list.get_steps(this, "2408 River Rock Circle");
         //steps.get(0).distance_in_meters
         //            .str
         //            .maneuver
 
-
-        Log.d("Steps_size" , "" + steps.size());
+        //for testing get_steps()
+        /*Log.d("Steps_size" , "" + steps.size());
 
         try{
             for(Map_Stuff.Step_Tuple st: steps)
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("steps_StackTrace_" + i, ste_arr[i].toString());
             }
 
-        }
+        }*/
     }
     void enableArButton(){
         View enable_ar = findViewById(R.id.enable_ar);
