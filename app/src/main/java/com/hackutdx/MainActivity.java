@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ar.core.*;
@@ -39,6 +40,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AR_Activity.class));
             }
         });
+
+        try {
+            Map_Stuff m = new Map_Stuff(this);
+            TextView route = findViewById(R.id.textView);
+            String steps = m.get_steps(m.read_url(m.getURL("2408 River Rock Cir Arlington TX")));
+            route.setText(steps);
+
+        }catch(Exception e){
+            TextView route = findViewById(R.id.textView);
+            route.setText("Exception");
+        }
     }
     void enableArButton(){
         View enable_ar = findViewById(R.id.enable_ar);
