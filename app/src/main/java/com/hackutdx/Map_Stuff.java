@@ -77,7 +77,7 @@ public class Map_Stuff {
         }
         Log.d("my_result", result.toString().replaceAll("\\s+", ""));
 
-        return (JSONObject) new JSONParser().parse(result.toString().replaceAll("\\s+", ""));
+        return (JSONObject) new JSONParser().parse(result.toString().replaceAll("\\s+", " "));
     }
 
     public List<Step_Tuple> get_steps(JSONObject obj)
