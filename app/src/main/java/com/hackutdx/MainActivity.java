@@ -86,11 +86,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Use this line to get directions list from current spot
         List<Map_Stuff.Step_Tuple> steps = get_steps();
-        Log.d("Step sumn" , "bluh");
-        for(Map_Stuff.Step_Tuple st: steps)
-        {
-            Log.d("Step_out" , st.toString());
-        }
+        //Log.d("Step sumn" , "bluh");
+        //for(Map_Stuff.Step_Tuple st: steps)
+        //{
+        //    Log.d("Step_out" , st.toString());
+        //}
     }
     void enableArButton(){
         View enable_ar = findViewById(R.id.enable_ar);
