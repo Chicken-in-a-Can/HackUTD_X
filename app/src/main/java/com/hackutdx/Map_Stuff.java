@@ -101,15 +101,40 @@ public class Map_Stuff {
 
     static class Step_Tuple
     {
+
         public String str;
         public long distance_in_meters;
 
         public String maneuver;
+        /* possible values
+        turn-slight-left,
+        turn-sharp-left,
+        turn-left,
+        keep-left,
+        uturn-left,
+        ramp-left,
+        fork-left,
+        roundabout-left,
+
+        turn-slight-right,
+        turn-sharp-right,
+        keep-right,
+        uturn-right,
+        turn-right,
+        ramp-right,
+        fork-right,
+        roundabout-right,
+
+        straight,
+        merge,
+        ferry,
+        ferry-train
+         */
         public Step_Tuple(JSONObject step)
         {
             str = (((String)step.get("html_instructions")).replaceAll("<[^>]*>", " ") + " in " + ((String)((JSONObject)step.get("distance")).get("text"))).replaceAll(" +", " ").trim();
             distance_in_meters = (long)((JSONObject)step.get("distance")).get("value");
-            maneuver = (String)((JSONObject)step.get("navigationInstruction")).get("string");
+            maneuver = (String)step.get("maneuver");
         }
 
         public Step_Tuple(String sstr, long ddistance, String mmaneuver)
