@@ -1,28 +1,34 @@
 package com.hackutdx
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isGone
 import androidx.lifecycle.lifecycleScope
 import com.google.ar.core.Anchor
 import com.google.ar.core.Config
 import com.google.ar.core.TrackingFailureReason
 import com.google.ar.core.Plane
+import com.google.ar.core.TrackingState
 import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
 import io.github.sceneview.ar.getDescription
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.math.Position
+import io.github.sceneview.math.Rotation
 import io.github.sceneview.model.ModelInstance
 import io.github.sceneview.node.ModelNode
 import kotlinx.coroutines.launch
 
+private const val arrow = "https://drive.google.com/file/d/13_IvgSGIDikcLdU-GyW3RjdREkcFhCnR/view?usp=sharing"
 public class AR_Activity : AppCompatActivity(R.layout.ar_activity) {
     lateinit var sceneView: ARSceneView
     lateinit var loadingView: View
-    lateinit var instructionText: TextView;
 
     var isLoading = false
         set(value){
@@ -46,6 +52,13 @@ public class AR_Activity : AppCompatActivity(R.layout.ar_activity) {
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        setFullScreen(
+            findViewById(R.id.rootView),
+            fullScreen = true,
+            hideSystemBars = true,
+            fitsSystemWindows = true,
+        )
+        loadingView = findViewById(R.id.loadingView)
         sceneView = findViewById<ARSceneView?>(R.id.sceneView).apply {
             planeRenderer.isEnabled = true
             configureSession{
@@ -80,14 +93,14 @@ public class AR_Activity : AppCompatActivity(R.layout.ar_activity) {
                     lifecycleScope.launch {
                         isLoading = true
                         sceneView.modelLoader.loadModelInstance(
-                            "/home/bob/Programming/HackUTD_X/assets/cone.obj"
+                            "https://drive.google.com/file/d/13_IvgSGIDikcLdU-GyW3RjdREkcFhCnR/view?usp=sharing"
                         )?.let{
                             modelInstance ->
                                 addChildNode(
                                     ModelNode(
                                         modelInstance = modelInstance,
-                                        scaleToUnits = 0.5f,
-                                        centerOrigin = Position(y = -0.5f)
+                                        scaleToUnits = 1f,
+                                        centerOrigin = Position(y = 5f)
                                     ).apply {
                                         isEditable = true
                                     }
@@ -98,5 +111,34 @@ public class AR_Activity : AppCompatActivity(R.layout.ar_activity) {
                     anchorNode = this
                 }
         )
+    }
+    private fun Activity.setFullScreen(
+        rootView: View,
+        fullScreen: Boolean = true,
+        hideSystemBars: Boolean = true,
+        fitsSystemWindows: Boolean = true,
+    ) {
+        rootView.viewTreeObserver?.addOnWindowFocusChangeListener { hasFocus ->
+            if(hasFocus){
+                WindowCompat.setDecorFitsSystemWindows(window, fitsSystemWindows)
+                WindowInsetsControllerCompat(window, rootView).apply {
+                    if (hideSystemBars){
+                        if(fullScreen){
+                            hide(
+                                WindowInsetsCompat.Type.statusBars() or
+                                    WindowInsetsCompat.Type.navigationBars()
+                            )
+                        } else{
+                            show(
+                                WindowInsetsCompat.Type.statusBars() or
+                                        WindowInsetsCompat.Type.navigationBars()
+                            )
+                        }
+                        systemBarsBehavior =
+                            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                    }
+                }
+            }
+        }
     }
 }
