@@ -8,9 +8,11 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -28,6 +30,36 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    class Get_directions_list extends AsyncTask<Context, Void, Void>
+    {
+
+
+
+        @Override
+        protected Void doInBackground(Context... contexts) {
+             try {
+                Map_Stuff m = new Map_Stuff(contexts[0]);
+                TextView route = findViewById(R.id.textView);
+                route.setText("" + m.latitude + " " + m.longitude);
+                String steps = m.get_steps(m.read_url(m.getURL("2408 River Rock Cir Arlington TX")));
+                route.setText(steps);
+
+            }catch(Exception e){
+                TextView route = findViewById(R.id.textView);
+                StringBuilder stbuf = new StringBuilder();
+                for(StackTraceElement ste: e.getStackTrace())
+                {
+                    stbuf.append(ste.toString());
+                    stbuf.append('\n');
+                }
+                route.setText(stbuf.toString());
+
+            }
+            return null;
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,16 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        try {
-            Map_Stuff m = new Map_Stuff(this);
-            TextView route = findViewById(R.id.textView);
-            String steps = m.get_steps(m.read_url(m.getURL("2408 River Rock Cir Arlington TX")));
-            route.setText(steps);
-
-        }catch(Exception e){
-            TextView route = findViewById(R.id.textView);
-            route.setText("Exception");
-        }
+        new Get_directions_list().execute(this);
     }
     void enableArButton(){
         View enable_ar = findViewById(R.id.enable_ar);

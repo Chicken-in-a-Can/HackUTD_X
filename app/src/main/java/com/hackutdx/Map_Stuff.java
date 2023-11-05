@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 
@@ -23,18 +25,22 @@ public class Map_Stuff {
     public double longitude;
     public double latitude;
 
+    public final LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        }
+    };
     public Map_Stuff(Context context) {
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        final LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-            }
-        };
+
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+        Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        latitude = l.getLatitude();
+        longitude = l.getLongitude();
+        //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 10, locationListener);
     }
 
     public String getURL(String destination_address)
@@ -75,4 +81,6 @@ public class Map_Stuff {
         }
         return buffer.toString();
     }
+
+
 }
