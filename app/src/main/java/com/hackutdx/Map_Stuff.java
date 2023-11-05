@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -51,16 +52,14 @@ public class Map_Stuff {
 
     public String getURL(String destination_address)
     {
-        ((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText("getURL");
         String url_formatted_destination_address = destination_address.replaceAll(" ", "+");
         String url_string = "https://maps.googleapis.com/maps/api/directions/json?destination=" + url_formatted_destination_address + "&&origin=" + latitude + "," + longitude + "&key=AIzaSyADi3dDW9bZQ_LdXJpSjVALSB-FN9WSzc4";
-        ((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText(url_string);
+        ((TextView)((Activity)context).findViewById(R.id.textView3)).setText(url_string);
         return url_string;
     }
 
     public JSONObject read_url(String url_string) throws Exception
     {
-        ((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText("read_url");
         StringBuilder result = new StringBuilder();
         URL url = new URL(url_string);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -71,26 +70,31 @@ public class Map_Stuff {
                 result.append(line);
             }
         }
-        ((TextView)((Activity)context).findViewById(R.id.textView)).setText(result.toString());
-        return (JSONObject) new JSONParser().parse(result.toString());
+        Log.d("my_result", result.toString().replaceAll("\\s+", ""));
+        return (JSONObject) new JSONParser().parse(result.toString().replaceAll("\\s+", ""));
     }
 
     public String get_steps(JSONObject obj)
     {
-        //((TextView)((Activity)context).findViewById(R.id.CurrentFunction)).setText("get_steps");
+        Log.d("My_JSON", obj.toString());
         StringBuilder buffer = new StringBuilder();
-        List<Object> routes = (List) obj.get("routes");
-        Object route = routes.get(0);
-        List<Object> legs = (List) ((JSONObject) route).get("legs");
-        Object leg = legs.get(0);
-        List<Object> steps = (List) ((JSONObject) leg).get("steps");
+        List<JSONObject> routes = (List) obj.get("routes");
+        JSONObject route = routes.get(0);
+        List<JSONObject> legs = (List) route.get("legs");
+        JSONObject leg = legs.get(0);
+        List<JSONObject> steps = (List) leg.get("steps");
 
-        for(Object step: steps)
+        int i = 0;
+        for(JSONObject step: steps)
         {
-            buffer.append((String)((JSONObject)step).get("html_instructions"));
-            buffer.append(' ');
+            buffer.append((String)step.get("html_instructions") + " in " + ((JSONObject)step.get("distance")).get("text"));
+            buffer.append('\n');
+            Log.d("my_step_" + i++, (String)step.get("html_instructions") + " " + ((JSONObject)step.get("distance")).get("text") );
         }
+
+        Log.d("steps_string", buffer.toString().replaceAll("<[^>]*>", " ").replaceAll(" +", " ").trim());
         return buffer.toString();
+
     }
 
 

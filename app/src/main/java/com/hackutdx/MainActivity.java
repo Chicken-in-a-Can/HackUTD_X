@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
              try {
                 Map_Stuff m = new Map_Stuff(contexts[0]);
                 TextView route = findViewById(R.id.textView);
-                route.setText("" + m.latitude + " " + m.longitude);
+                //route.setText("" + m.latitude + " " + m.longitude);
                 String steps = m.get_steps(m.read_url(m.getURL("2801 Rutford Avenue")));
                 route.setText(steps);
 
