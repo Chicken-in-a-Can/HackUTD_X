@@ -95,7 +95,7 @@ class Compose_AR : ComponentActivity() {
                                                     scaleToUnits = 10f,
                                                     // Bottom origin instead of center so the
                                                     // model base is on floor
-                                                    centerOrigin = Position(x = 0f, y = -2f, z = next_step.toFloat()),
+                                                    centerOrigin = Position(x = 0f, y = -2f, z = if(next_step < 25){next_step.toFloat()}else{25f}),
                                                 ).apply {
                                                     isEditable = true
                                                 }
