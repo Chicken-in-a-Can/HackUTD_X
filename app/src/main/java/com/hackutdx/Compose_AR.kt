@@ -1,6 +1,11 @@
 package com.hackutdx
 
+import com.hackutdx.MainActivity
+
 import android.os.Bundle
+import android.util.Log
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -21,18 +26,19 @@ import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.arcore.getUpdatedPlanes
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.math.Position
+import io.github.sceneview.math.Rotation
 import io.github.sceneview.node.ModelNode
 import io.github.sceneview.rememberEngine
 import io.github.sceneview.rememberModelLoader
 import io.github.sceneview.rememberNodes
 import kotlinx.coroutines.launch
 
-private const val kModelFile = "https://sceneview.github.io/assets/models/DamagedHelmet.glb"
+private const val kModelFile = "https://drive.google.com/uc?export=download&id=13_IvgSGIDikcLdU-GyW3RjdREkcFhCnR"
 
 class Compose_AR : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         setContent {
             // A surface container using the 'background' color from the theme
@@ -46,6 +52,12 @@ class Compose_AR : ComponentActivity() {
                 val childNodes = rememberNodes()
                 val coroutineScope = rememberCoroutineScope()
 
+                //Use this line to get directions list from current spot
+                Log.d("Passed1" , "we ball with " + MainActivity.getDestination() );
+                val steps = Get_directions_list.get_steps(this@Compose_AR, MainActivity.getDestination())
+                Log.d("Passed2" , "we ball");
+                val next_step = steps.get(0).distance_in_meters
+                Log.d("Passed3", "" + next_step)
                 ARScene(
                     modifier = Modifier.fillMaxSize(),
                     childNodes = childNodes,
@@ -80,10 +92,10 @@ class Compose_AR : ComponentActivity() {
                                                 ModelNode(
                                                     modelInstance = it,
                                                     // Scale to fit in a 0.5 meters cube
-                                                    scaleToUnits = 0.5f,
+                                                    scaleToUnits = 10f,
                                                     // Bottom origin instead of center so the
                                                     // model base is on floor
-                                                    centerOrigin = Position(y = -0.5f)
+                                                    centerOrigin = Position(x = 0f, y = -2f, z = next_step.toFloat()),
                                                 ).apply {
                                                     isEditable = true
                                                 }

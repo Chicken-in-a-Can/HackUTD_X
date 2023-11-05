@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+    public static String destination;
 
 
 
@@ -47,10 +47,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         enableArButton();
         View enable_ar = findViewById(R.id.enable_ar);
-        String user_entered_address = ((EditText)findViewById(R.id.input_address)).getText().toString();
+        EditText destination_entry = findViewById(R.id.input_address);
         enable_ar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                destination = destination_entry.getText().toString();
                 startActivity(new Intent(MainActivity.this, Compose_AR.class));
             }
         });
@@ -144,5 +145,8 @@ public class MainActivity extends AppCompatActivity {
             }
             finish();
         }
+    }
+    public static String getDestination(){
+        return destination;
     }
 }

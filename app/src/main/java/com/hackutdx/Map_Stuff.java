@@ -58,7 +58,6 @@ public class Map_Stuff {
     {
         String url_formatted_destination_address = destination_address.replaceAll(" ", "+");
         String url_string = "https://maps.googleapis.com/maps/api/directions/json?destination=" + url_formatted_destination_address + "&&origin=" + latitude + "," + longitude + "&key=AIzaSyADi3dDW9bZQ_LdXJpSjVALSB-FN9WSzc4";
-        ((TextView)((Activity)context).findViewById(R.id.textView3)).setText(url_string);
         Log.d("my_url", url_string);
         return url_string;
     }

@@ -9,8 +9,8 @@
 
     <Button
         android:id="@+id/enable_ar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="191dp"
+        android:layout_height="55dp"
         android:text="Commence Navigation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,14 +21,14 @@
     <EditText
         android:id="@+id/input_address"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginTop="408dp"
         android:ems="10"
         android:inputType="textPostalAddress"
-        android:text="Address"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Address" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
